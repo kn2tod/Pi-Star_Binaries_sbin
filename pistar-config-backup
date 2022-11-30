@@ -2,7 +2,7 @@
 #
 ###############################################################################
 #                                                                             #
-#               Backup Configuration Files via Command Line                   #
+#           Backup Pi-Star Configuration Files from SSH Command line          #
 #                                                                             #
 #    Version 1.0, Code, Design and Development by Andy Taylor (MW0MWZ).       #
 #                                                                             #
@@ -56,4 +56,3 @@ sudo zip -j /tmp/$zipfile $backupDir/* 2>&1
 unzip -l /tmp/$zipfile 2>&1
 #
 #sudo rm -r $backupDir 2>&1
-
