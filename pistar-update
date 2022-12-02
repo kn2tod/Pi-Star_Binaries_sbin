@@ -155,6 +155,14 @@ main_function() {
 	pistar-firewall > /dev/null 2>&1
 	echo "Done"
 
+	# ensure pistar-remote config has key-value pairs for new funcs (12/2/22)
+	if ! grep -q 'hostfiles=8999995' /etc/pistar-remote ; then
+	    sed -i "/^# TG commands.*/a hostfiles=8999995" /etc/pistar-remote
+	fi
+	if ! grep -q 'reconnect=8999994' /etc/pistar-remote ; then
+	    sed -i "/^# TG commands.*/a reconnect=8999994" /etc/pistar-remote
+	fi
+
 	# Pre-Fix some config in MMDVMHost for update purposes.
 	mmdvmHostVer=`MMDVMHost -v | awk '{print $3}' | cut -c 1-8`
 	needsUpdate=`grep -c Gwy /etc/mmdvmhost`
