@@ -252,7 +252,13 @@ while True:
 				# M: 2017-07-03 09:39:38.208 DMR Slot 2, received RF voice header from M1ABC to 123456
 				if str('received RF voice header from ' + keeperCall + ' to ' + dmrreconnect) in line:
 					# trigger reconnect
-					os.system(r'/usr/local/sbin/pistar-reconnect')
+					os.system(r'/bin/mount -o remount,rw /')
+					os.system(r'logger -t "[$$]" "Pi-Star --> Wifi Reconnect initiated <--"')
+					os.system(r'wpa_cli reconfigure wlan0')
+					os.system(r'ifdown wlan0 && sleep 3')
+					os.system(r'ifup wlan0')
+					os.system(r'wpa_cli scan')
+					os.system(r'/bin/mount -o remount,ro /')
 
 				# P25 Stop MMDVMHost
                                 # M: 2017-08-08 08:02:43.352 P25, received RF transmission from M1ABC to TG 123456
