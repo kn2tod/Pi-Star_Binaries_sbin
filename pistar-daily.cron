@@ -156,6 +156,14 @@ if ! [ $(cat /lib/systemd/system/nginx.service | grep -o "mkdir") ]; then
 fi
 
 # Make the disk RO
-mount -o remount,ro /
+#mount -o remount,ro /
+
+# Check if we need to return to read-only status
+ro=$(grep -ihosw -m 1 ro {/boot,/boot/firmware}/cmdline.txt | tail -n 1)
+if [ "$ro" ]; then
+  fw=$(sed -n "s|/dev/.*/boot\(.*\) [ve].*|\1|p" /proc/mounts)
+  sudo mount -o remount,ro /
+  sudo mount -o remount,ro /boot${fw}
+fi
 
 exit  0
