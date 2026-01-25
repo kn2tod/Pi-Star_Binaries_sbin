@@ -3,17 +3,20 @@
 # Create extended DMR id file (DMRids.xtd.dat)
 # Ref: www.kf5iw.com/contactdb.php; https://database.radioid.net/static/user.csv
 # Options: -u: update DMRids.xtd.dat file; -r: delete (reset) temp DMRIdx.dat file
-#          -s: use radio.net database instead of kf5iw
+#          -s: use radio.net database
+#          -k: use kf5iw database (default)
 #hmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhmhm
 #
 updt=0
 rst=0
 src=0
-while getopts urs opt; do
+while getopts ursk opt; do
   case $opt in
     u) updt=1;;
     r) rst=1;;
     s) src=1;;
+    k) src=0;;
+    *) ;;
   esac
 done
 shift $(($OPTIND - 1))
@@ -25,12 +28,13 @@ logger -t "[$$]" "Pi-Star --> Start HostFiles Extension"
 echo "Starting extended hostfile dowwnload..."
 if [ $src == 0 ]; then
   web="(KF5IW)"
+  logger -t "[$$]" "Pi-Star --> Start HostFiles Extension: using ${web}"
   echo "...downloading latest contact file (KF5IW)"
   curl --fail -o /tmp/contactdb.php -s http://www.kf5iw.com/contactdb.php
 # x=$(sed -n 's|\(.*\)STD/contacts_STD_\(.*\).zip\(.*\)|contacts_STD_\2|p' /tmp/contactdb.php)
 # xx="http://www.kf5iw.com/data/Anytone/D868UV/STD/"$x".zip"
   x=$(sed -n 's|\(.*\)ALL/contacts_ALL_\(.*\).zip\(.*\)|contacts_ALL_\2|p' /tmp/contactdb.php)
-  xx="http://www.kf5iw.com/data/Anytone/D868UV/ALL/"$x".zip"
+  xx="http://www.kf5iw.com/data/Anytone/D868UV/ALL/${x}.zip"
   curl --fail -o /tmp/extendedx.zip -f $xx
   if [ $? -eq 0 ]; then
      rm /tmp/contactdb.php
@@ -47,8 +51,10 @@ if [ $src == 0 ]; then
 else
   web="(RadioID.Net)"
   if [ -f /usr/local/etc/stripped.csv ]; then
+     echo "...using internal contact file (STRIPPED.CSV)"
      sudo cp /usr/local/etc/stripped.csv           /tmp/xcontacts.csv
   else
+     logger -t "[$$]" "Pi-Star --> Start HostFiles Extension: using ${web}"
      echo "...downloading latest contact file (RADIOID.NET)"
      sudo curl --fail -o /tmp/xcontacts.csv -f https://database.radioid.net/static/user.csv
   fi
@@ -69,6 +75,8 @@ echo "...download completed. Beginning edits..."
 sudo sed -i -e '1 d
                 s|^"",||g
                 s|,"","",""$||g'                   /tmp/xcontacts.csv
+#
+sudo sed -i    's|[[:cntrl:]]/-/g'                 /tmp/xcontacts.csv
 #
 echo "...abbreviating states"
 sudo sed -i -e 's|"Alabama"|"AL"|g
@@ -327,8 +335,8 @@ if [ "$fs" == "ro" ]; then
   sudo mount -o remount,ro / # sudo mount -o remount,ro /boot${fw}
 fi
 fi
-echo "Ending extended hostfile dowwnload/update..."
+echo "Ending extended hostfile dowwnload/update"
 else
   echo "  ... download failed"
 fi
-logger -t "[$$]" "Pi-Star --> End HostFiles Extension..."
+logger -t "[$$]" "Pi-Star --> End HostFiles Extension"
