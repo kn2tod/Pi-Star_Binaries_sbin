@@ -16,11 +16,12 @@ if [ "$opt" == "list" ]; then
 fi
 
 x=$1
-p1=${x/: [a-zA-Z0-9.]*/}
-p2=${x/[a-zA-Z0-9.]*: /}
+p1=${x/: [a-zA-Z0-9.]*/}                                       # dir
+p2=${x/[a-zA-Z0-9.]*: /}                                       # tft file
+p3=$(echo ${p2} | sed -n 's/.*\(NX[0-9]*[TK][0-9]*\).*/\1/p')  # model
 px="/usr/local/bin/Nextion/$p1/$p2"
-logger -t "[$$]" "Pi-Star --> $px"
-/usr/local/bin/Nextion/nextion.py $px /dev/ttyUSB0 {NX3224T024}
+logger -t "[$$]" "Pi-Star --> ${px} - ${p3}"
+/usr/local/bin/Nextion/nextion-upload.py ${px} /dev/ttyUSB0 ${p3} # {NX3224T024}
 
 #sudo systemctl restart NextionDriver.service
 
