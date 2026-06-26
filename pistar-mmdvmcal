@@ -7,7 +7,7 @@
 #     Version 1.1, Code, Design and Development by Andy Taylor (MW0MWZ).     #
 #                                                                            #
 #                 Make it simple to run MMDVMCal on Pi-Star.                 #
-#                      Orrigional suggestion by "mrickey"                    #
+#                      Original suggestion by "mrickey"                      #
 #                                                                            #
 ##############################################################################
 #
@@ -17,14 +17,14 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Get the modem port from /etc/mmdvmhost
-mmdvmModem=$(grep -m 1 'Port=' /etc/mmdvmhost | awk -F "=" '/Port/ {print $2}')
+mmdvmModem=$(grep -m 1 'UARTPort=' /etc/mmdvmhost | awk -F "=" '/Port/ {print $2}')
 modemSpeed=$(grep -m 1 'UARTSpeed=' /etc/mmdvmhost | awk -F "=" '/UARTSpeed/ {print $2}')
 
 # Output some feedback to the terminal
 echo "Stopping Pi-Star Services..."
 
 # Make the disk RW
-mount -o remount,rw /
+$(mount -o remount,ro / >/dev/null 2>&1 </dev/null)
 
 # Stop the services
 systemctl stop pistar-watchdog.timer
@@ -53,7 +53,7 @@ killall MMDVMCal >/dev/null 2>&1
 echo "Starting Pi-Star Services..."
 
 # Set the disk back to RO on MMDVMCal exit
-mount -o remount,ro /
+$(mount -o remount,ro / >/dev/null 2>&1 </dev/null)
 
 # Start the services
 systemctl start pistar-watchdog.timer
@@ -62,4 +62,4 @@ systemctl start mmdvmhost.timer
 systemctl start mmdvmhost
 
 # Complete
-echo "Finnished..."
+echo "Finished..."
