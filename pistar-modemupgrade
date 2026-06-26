@@ -34,6 +34,10 @@ fi
 # Verbose mode, pass "VERBOSE=1" env. var. E.g. `sudo VERBOSE=1 ./pistar-modemupgrade <bar>`
 #
 
+if [ ! -t 0 ]; then
+    NP=1
+fi
+
 #
 # Check CLI arguments and determine the modem type and its respective FW file...
 #
