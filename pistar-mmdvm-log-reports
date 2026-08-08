@@ -81,7 +81,7 @@ shift $(($OPTIND - 1))
 # gather up last 2-3 log files
 if [ ! "$f" == "" ]; then
 # sudo egrep -sh "transmission from| end |watchdog|lost" $f > /tmp/atmpfile2
-  sudo egrep -sh "transmission from|watchdog" $f > /tmp/atmpfile2
+  sudo egrep -sh "transmission from|watchdog" ${f}/MMDVM*.log > /tmp/atmpfile2
 else
 # sudo egrep -sh "transmission from| end |watchdog|lost" /var/log/pi-star/MMDVM*.log > /tmp/atmpfile2
   sudo egrep -sh "transmission from|watchdog" /var/log/pi-star/MMDVM*.log > /tmp/atmpfile2
