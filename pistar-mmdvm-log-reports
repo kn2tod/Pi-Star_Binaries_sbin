@@ -241,7 +241,7 @@ sudo mv /tmp/atmpfile2d /tmp/MMDVM-$x-editted.log
 #
 banner="==========================================================================================="
 if [ "$1" ]; then
-  title=$(echo "TG $1:" $(sed -n "s/^.*;.*;\(.*\);[PT].$1$/\1/p" /usr/local/etc/TGList_BM.txt))
+  title=$(echo "TG ${1^^[a-z]}:" $(sed -n "s/^.*;.*;\(.*\);[PT].$1$/\1/p" /usr/local/etc/TGList_BM.txt))
   n=$((( 89 - "${#title}" ) / 2))
   rptname=$(echo "${banner:0:$n} $title ${banner:0:$n+1-(${#title}%2)}")
 fi
@@ -297,7 +297,7 @@ if [ $srt == 1 ]; then
 # sudo rm -f /tmp/atmpfile6
   t2=$SECONDS
   if [ "$1" ]; then
-    tg=$1
+    tg=${1^^[a-z]}
     sudo mv /tmp/MMDVM-$x-sorted.log /tmp/MMDVM-$x-sorted-$tg.log
 #   echo -e "$rptname\n" > /tmp/MMDVM-$x-sorted-$tg.log
 #   cat /tmp/MMDVM-$x-sorted.log >> /tmp/MMDVM-$x-sorted-$tg.log
