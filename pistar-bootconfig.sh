@@ -66,6 +66,8 @@ mv -f /tmp/config_restore/*.nmconnection /etc/NetworkManager/system-connections/
 sudo chmod 600 /etc/NetworkManager/system-connections/*.nmconnection 2>&1
 rm -f /tmp/config_restore/*.nmconnection 2>&1   # in case they didn't get moved
 
+rm -f /tmp/config_restore/*Hosts.txt /root  2>&1
+
 mv -f /tmp/config_restore/ircddblocal.php /var/www/dashboard/config/ 2>&1
 mv -f /tmp/config_restore/config.php /var/www/dashboard/config/ 2>&1
 mv -f /tmp/config_restore/wpa_supplicant.conf /etc/wpa_supplicant/ 2>&1
