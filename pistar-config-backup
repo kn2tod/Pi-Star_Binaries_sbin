@@ -56,12 +56,13 @@ sudo cp /etc/iptables.rules $backupDir/Extra 2>&1
 sudo cp /etc/ip6tables.rules $backupDir/Extra 2>&1
 sudo cp /etc/rc.local $backupDir/Extra 2>&1
 sudo cp /etc/NetworkManager/system-connections/*.nmconnection $backupDir/Extra 2>&1
+sudo cp /root/*Hosts.txt $backupDir/Extra 2>&1
 #
 hostNameInfo=$(cat /etc/hostname)
 hostNameInfo=${hostNameInfo^^}
 local_time=$(date +%m-%d-%y-%H%M%S)
 zipfile=$hostNameInfo-Config-$local_time.zip
-sudo zip -j /tmp/$zipfile $backupDir/* 2>&1
+sudo zip -j -r /tmp/$zipfile $backupDir/* 2>&1
 unzip -l /tmp/$zipfile 2>&1
 #
 #sudo rm -r $backupDir 2>&1
