@@ -28,7 +28,7 @@
 #   sudo bash editlog.sh -d0 31134       # list one talk group, today's date only
 #   sudo bash editlog.sh -d1 3101        # list one talk group, yesterday's date only
 #   sudo bash editlog.sh -c m1abc        # select for specified callsign
-#   sudo bash editlog.sh -nt20 -d0 3101  # select today's entries, 8pm or later 
+#   sudo bash editlog.sh -nt20 -d0 3101  # select today's entries, 8pm or later
 #
 #egrep -h "from|end|watchdog|lost" /var/log/pi-star/MMDVM-2020-09-10.log | sed '/\(CSBK\|overflow\|Downlink\)/d'
 #sudo egrep -h "from|end|watchdog|lost" /var/log/pi-star/MMDVM-2020-09-10.log | sed '/^I:/d' | sed '/voice header/d' | sed 's/received network end of voice transmission from //g' | sed 's/DMR Slot /TS/g' | sed 's/to TG/ TG/g' > /tmp/afilex4
@@ -54,7 +54,7 @@ for arg in "$@"; do
     -ts[12])   set -- "$@" "-t"  ; ts="TS${arg:3}";;
     -d[0-9]*)  set -- "$@" "-d"  ; dx=${arg:2};;
     -a)        set -- "$@" "-n"  ;;    # equiv -n
-    -nt[0-9]*) set -- "$@" "-h"  ; hr=${arg:3};; 
+    -nt[0-9]*) set -- "$@" "-h"  ; hr=${arg:3};;
     *)         set -- "$@" "$arg";;
   esac
 done
@@ -133,12 +133,12 @@ sudo sed -i -e 's|, \([A-Z0-9]\{1\} \)|, \1      |g
                 s|, \([A-Z0-9]\{6\} \)|, \1 |g' /tmp/atmpfile2
 #
 # normalize TG's
-sudo sed -i -e 's|TG \([0-9]\{1\},\)|TG       \1|g
-                s|TG \([0-9]\{2\},\)|TG      \1|g
-                s|TG \([0-9]\{3\},\)|TG     \1|g
-                s|TG \([0-9]\{4\},\)|TG    \1|g
-                s|TG \([0-9]\{5\},\)|TG   \1|g
-                s|TG \([0-9]\{6\},\)|TG  \1|g' /tmp/atmpfile2
+sudo sed -i -e 's|TG \([A-Z0-9]\{1\},\)|TG       \1|g
+                s|TG \([A-Z0-9]\{2\},\)|TG      \1|g
+                s|TG \([A-Z0-9]\{3\},\)|TG     \1|g
+                s|TG \([A-Z0-9]\{4\},\)|TG    \1|g
+                s|TG \([A-Z0-9]\{5\},\)|TG   \1|g
+                s|TG \([A-Z0-9]\{6\},\)|TG  \1|g' /tmp/atmpfile2
 #
 # normalize host cmds/parrots
 sudo sed -i -e 's|to \([0-9]\{2\},\)| RF      \1|g
@@ -165,7 +165,7 @@ sudo sed -i -e 's|, \([0-9]% pac\)|,  \1|g
 #
 # select for TG?
 if [ "$1" ]; then
-  sudo sed -i -e "/ $1, /!d" /tmp/atmpfile2
+  sudo sed -i -e "/ ${1^^[a-z]}, /!d" /tmp/atmpfile2
 fi
 #
 # select for callsign?
@@ -198,13 +198,13 @@ fi
 # select net time start?
 if [ $nt == 1 ]; then
   nawk -F" " -v hr=$hr 'substr($3,1,2) >= hr {print}' /tmp/atmpfile2d > /tmp/atmpfile2x
-  sudo mv /tmp/atmpfile2x /tmp/atmpfile2d 
+  sudo mv /tmp/atmpfile2x /tmp/atmpfile2d
 fi
 #
 # annotate with names?
 if [ $nl == 1 ]; then
-# cut -c29-37 /tmp/atmpfile2d | sort | uniq | sed -n '/^[0-9 ]*$/!p' > /tmp/atmpfile4 
-  cut -c29-37 /tmp/atmpfile2d | sort | uniq                          > /tmp/atmpfile4 
+# cut -c29-37 /tmp/atmpfile2d | sort | uniq | sed -n '/^[0-9 ]*$/!p' > /tmp/atmpfile4
+  cut -c29-37 /tmp/atmpfile2d | sort | uniq                          > /tmp/atmpfile4
   echo -n > /tmp/atmpfile5
   while read line
   do
@@ -275,7 +275,7 @@ if [ $srt == 1 ]; then
 #       nlx=${csx:10}
         nlx=$(grep -m 1 -a "^$nline" /tmp/atmpfile6 | cut -c10-57)
       fi
-    fi 
+    fi
     echo "$line $nlx" >> /tmp/MMDVM-$x-sorted.log
     if [ ! "$nline" == "$nlq" ]; then
       if [ ! "$nlq" == "" ]; then
@@ -283,7 +283,7 @@ if [ $srt == 1 ]; then
         echo "$nlq ${sp:0:6-$n}${tot::$n-1}.${tot:$n-1}" >> /tmp/atmpfile8
       fi
       nlq=$nline
-      tot=0 
+      tot=0
     fi
     tot=$(expr $tot + ${line:48:4}${line:53:1})
     pline=$nline
@@ -383,4 +383,3 @@ fi
 echo $(($t2-$t1)) "secs"
 #
 sudo rm -f /tmp/atmpfile2
-
