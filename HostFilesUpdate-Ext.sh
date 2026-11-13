@@ -78,11 +78,10 @@ echo "...download completed. Beginning edits..."
 sudo sed -i -e '1 d
                 s|^"",||g
                 s|[[:cntrl:]]$||g
-                s|,"","",""$||g'                   /tmp/xcontacts.csv
+                s|,"","",""$||g
+                s|[[:cntrl:]]|-|g'                 /tmp/xcontacts.csv
 #
-sudo sed -i    's|[[:cntrl:]]|-|g'                 /tmp/xcontacts.csv
-#
-echo "...abbreviating states"
+echo "...abbreviating states, provinces, countries..."
 sudo sed -i -e 's|"Alabama"|"AL"|g
                 s|"Alaska"|"AK"|g
                 s|"Arizona"|"AZ"|g
@@ -133,10 +132,9 @@ sudo sed -i -e 's|"Alabama"|"AL"|g
                 s|"West Virginia"|"WV"|g
                 s|"Wisconsin"|"WI"|g
                 s|"Wyoming"|"WY"|g
-                s|"District of Columbia"|"DC"|g'   /tmp/xcontacts.csv
-#
-echo "...abbreviating provinces"
-sudo sed -i -e 's|"Alberta"|"AB"|g
+                s|"District of Columbia"|"DC"|g
+#...abbreviating provinces:
+                s|"Alberta"|"AB"|g
                 s|"British Columbia"|"BC"|g
                 s|"Manitoba"|"MB"|g
                 s|"New Brunswick"|"NB"|g
@@ -153,10 +151,9 @@ sudo sed -i -e 's|"Alberta"|"AB"|g
                 s|"Saskatchewan"|"SK"|g
                 s|"Yukon"|"YT"|g
                 s|"St. Johns,,CAN"|"St. Johns,NL,CAN"|g
-                s|,"New South Wales","A|,"NSW","A|g'   /tmp/xcontacts.csv
-#
-echo "...abbreviating countries"
-sudo sed -i -e 's|"United States"|"US"|g
+                s|,"New South Wales","A|,"NSW","A|g
+#...abbreviating countries
+                s|"United States"|"US"|g
                 s|"United Kingdom"|"UK"|g
                 s|"United Arab Emirates"|"UAE"|g
                 s|"Korea S Republic of"|"Korea"|g
@@ -272,14 +269,14 @@ sudo sed -i -e 's|, Mr."|"|g
 echo "...final cleanup"
 # cleanup last names of "none"
 sudo sed -i -e 's| None,|,|g
-                s| none,|,|g'                      /tmp/xcontacts.csv
+                s| none,|,|g
 # converts from quoted CSV to regular CSV; remove extraneous commas, spaces, quotes
-sudo sed -i -e 's|","|<|g
+                s|","|<|g
                 s|, | |g
                 s|,| |g
                 s|"||g
-                s|<|,|g'                           /tmp/xcontacts.csv
-sudo sed -i -e 's|    | |g
+                s|<|,|g
+                s|    | |g
                 s|   | |g
                 s|  | |g
                 s|, |,|g
