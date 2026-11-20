@@ -263,12 +263,12 @@ sudo sed -i -e 's|, Mr."|"|g
                 s|"Norcross\."|"Norcross"|g
                 s|"Cummings","GA"|"Cumming","GA"|g
                 s|"New York","NY"|"NY","NY"|g
-                s|"washington"|"Washington"|g'     /tmp/xcontacts.csv
+                s|"washington"|"Washington"|g
+                s|Auxiliary Communications AUXILIARY COMMUNICATIONS|Auxiliary Communications|g
+                s|Network Central Michigan Emergency Network,|Network,|g
+                s|Association Amateur Radio Emergency Communication As,|Association,|g
 #               s|Amateur Radio Emergency Communications|AREC|g
-#
-echo "...final cleanup"
-# cleanup last names of "none"
-sudo sed -i -e 's| None,|,|g
+                s| None,|,|g
                 s| none,|,|g
 # converts from quoted CSV to regular CSV; remove extraneous commas, spaces, quotes
                 s|","|<|g
